@@ -1,5 +1,5 @@
-using System;
 using BookingService.DAL;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+
+using Newtonsoft.Json.Converters;
+
+using System;
 
 namespace BookingService
 {
@@ -21,8 +25,12 @@ namespace BookingService
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.Converters.Add(new StringEnumConverter());
+            });
 
+            //add the db context to the di container
             services.AddDbContext<AppointmentContext>(options =>
                 options.UseNpgsql(Service.Configuration.GetConnectionString("BookingService")));
 
@@ -67,6 +75,14 @@ namespace BookingService
             {
                 endpoints.MapControllers();
             });
+
+#if DEBUG
+            //create the db on first startup 
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var context = serviceScope.ServiceProvider.GetRequiredService<AppointmentContext>();
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+#endif
         }
     }
 }
