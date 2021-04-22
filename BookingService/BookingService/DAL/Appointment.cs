@@ -50,13 +50,15 @@ namespace BookingService.DAL
                 Animal = dto.Animal,
                 Start = dto.Start,
                 End = dto.End,
-                Type = dto.Type
+                Type = dto.Type,
+                Canceled = dto.Canceled,
+                CancelReason = dto.CancelReason
             };
         }
 
         public static implicit operator AppointmentDto(Appointment dto)
         {
-            return new AppointmentDto(dto.Id, dto.Name, dto.Animal, dto.Start, dto.End, dto.Type);
+            return new AppointmentDto(dto.Id, dto.Name, dto.Animal, dto.Start, dto.End, dto.Type, dto.Canceled, dto.CancelReason);
         }
 
     }

@@ -1,8 +1,11 @@
 ﻿using BookingService.Models;
 using BookingService.Services;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -108,7 +111,48 @@ namespace BookingService.Controllers
             return result;
         }
 
-        [HttpPut("{id}/{reason}")]
+        /// <summary>
+        /// get a listing of appointments
+        /// </summary>
+        /// <param name="key">
+        /// the appointment property to filter on.
+        /// </param>
+        /// <param name="filter">
+        /// the contents wanted in the key property
+        /// </param>
+        /// <param name="index">
+        /// paging index
+        /// </param>
+        /// <param name="count">
+        /// total results to include
+        /// </param>
+        /// <param name="order">
+        /// property to orderby
+        /// </param>
+        /// <returns>an object representing a list of appointments</returns>
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<AppointmentDto>>> Search(string key = "", string filter = "", int index = 0, int count = 100, string order = "")
+        {
+            List<AppointmentDto> result = new List<AppointmentDto>();
+
+            try
+            {
+                result = await _appointmentService.SearchAppointmentsAsync(key, filter, index, count, order);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
+
+            return result;
+        }
+
+        [HttpPut("cancel/{id}")]
         public async Task<IActionResult> CancelAsync(Guid id, string reason)
         {
             ActionResult result;

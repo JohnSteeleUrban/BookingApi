@@ -10,6 +10,7 @@ namespace BookingService.Models
         public Task<AppointmentDto> GetAppointmentAsync(Guid id);
         public Task<bool> UpdateAppointmentAsync(AppointmentDto appointment);
         public Task<bool> CancelAsync(Guid id, string reason);
-        public Task<IList<AppointmentDto>> GetCancellationsAsync();
+
+        public Task<List<AppointmentDto>> SearchAppointmentsAsync(string key, string filter, int index, int count, string order);
     }
 }

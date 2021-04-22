@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BookingService.Services
@@ -60,9 +61,15 @@ namespace BookingService.Services
             return await _appointmentContext.CancelAsync(id, reason);
         }
 
-        public async Task<IList<AppointmentDto>> GetCancellationsAsync()
+        public async Task<List<AppointmentDto>> SearchAppointmentsAsync(string key = "", string filter = "", int index = 0, int count = 50, string order = "")
         {
-            throw new NotImplementedException();
+
+            //do any other business listing validations or logic applications here
+
+            List<Appointment> appointments =
+                await _appointmentContext.FindAppointmentsAsync(key, filter, index, count, order);
+
+            return appointments.Select(a => (AppointmentDto)a).ToList();
         }
 
         #region Validations
@@ -105,7 +112,7 @@ namespace BookingService.Services
             if (appointment.Type == AppointmentType.Wellness || appointment.Type == AppointmentType.Grooming)
             {
                 var diff = appointment.End - appointment.Start;
-                if (diff.TotalMinutes > 30)
+                if (diff.TotalMinutes >= 30)
                 {
                     throw new ArgumentException($"type: {appointment.Type} Wellness and Grooming must be 30 mins.");
                 }
@@ -115,7 +122,7 @@ namespace BookingService.Services
             if (appointment.Type == AppointmentType.Wellness || appointment.Type == AppointmentType.Grooming)
             {
                 var diff = appointment.End - appointment.Start;
-                if (diff.TotalMinutes > 60)
+                if (diff.TotalMinutes >= 60)
                 {
                     throw new ArgumentException($"type: {appointment.Type} and must be 60 mins.");
                 }

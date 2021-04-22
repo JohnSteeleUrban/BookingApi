@@ -6,7 +6,7 @@ namespace BookingService.Models
 {
     public class AppointmentDto
     {
-        public AppointmentDto(Guid id, string name, AnimalType animal, DateTime start, DateTime end, AppointmentType type)
+        public AppointmentDto(Guid id, string name, AnimalType animal, DateTime start, DateTime end, AppointmentType type, bool canceled, string cancelReason)
         {
             Id = id;
             Name = name;
@@ -14,6 +14,8 @@ namespace BookingService.Models
             Start = start;
             End = end;
             Type = type;
+            Canceled = canceled;
+            CancelReason = cancelReason;
         }
 
         [JsonProperty(PropertyName = "id")]
@@ -33,5 +35,12 @@ namespace BookingService.Models
 
         [JsonProperty(PropertyName = "type")]
         public AppointmentType Type { get; set; }
+
+        [JsonProperty(PropertyName = "canceled")]
+        public bool Canceled { get; set; } = false;
+
+        [JsonProperty(PropertyName = "canceledReason")]
+        public string CancelReason { get; set; } = String.Empty;
+
     }
 }
