@@ -112,17 +112,17 @@ namespace BookingService.Services
             if (appointment.Type == AppointmentType.Wellness || appointment.Type == AppointmentType.Grooming)
             {
                 var diff = appointment.End - appointment.Start;
-                if (diff.TotalMinutes >= 30)
+                if ((int)diff.TotalMinutes != 30)
                 {
                     throw new ArgumentException($"type: {appointment.Type} Wellness and Grooming must be 30 mins.");
                 }
             }
 
             //as per the requirements, surgery and dental appointments are 60 mins
-            if (appointment.Type == AppointmentType.Wellness || appointment.Type == AppointmentType.Grooming)
+            if (appointment.Type == AppointmentType.Dental || appointment.Type == AppointmentType.Grooming)
             {
                 var diff = appointment.End - appointment.Start;
-                if (diff.TotalMinutes >= 60)
+                if ((int)diff.TotalMinutes != 60)
                 {
                     throw new ArgumentException($"type: {appointment.Type} and must be 60 mins.");
                 }
