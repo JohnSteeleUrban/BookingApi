@@ -16,6 +16,7 @@
             - All privilages enabled 
 - Download and open the BookingService: https://github.com/JohnSteeleUrban/BookingApi
 - Open the solution with Visual Studio 2019.
+- Right click the solution in the Solution Explorer and click *Restore Nuget Packages*
 - Run the *BookingService* Profile.
 
 
